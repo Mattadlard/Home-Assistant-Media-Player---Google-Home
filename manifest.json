@@ -1,0 +1,28 @@
+{
+  "domain": "my_media_player",
+  "name": "My Media Player",
+  "documentation": "https://link.to.your.documentation",
+  "dependencies": [],
+  "codeowners": [],
+  "requirements": [],
+  "config_flow": true,
+  "quality_scale": "gold",
+  "version": "0.1.0",
+  "issue_tracker": "https://github.com/yourusername/your-repo/issues",
+  "after_dependencies": ["my_integration"],
+  "requirements": ["vlc==3.0.11", "pychromecast==8.0.0"],
+  "iot_class": "local_push",
+  "automation_platforms": ["homeassistant"],
+  "domain": "my_media_player",
+  "sensor": {
+    "name": "My Media Player Sensor",
+    "icon": "mdi:speaker",
+    "device_class": "sound",
+    "state": false
+  },
+  "integration_platform": "media_player",
+  "documentation": "https://link.to.your.documentation",
+  "requirements": ["vlc==3.0.11", "pychromecast==8.0.0"],
+  "codeowners": ["@yourusername"],
+  "config_flow": true
+}
