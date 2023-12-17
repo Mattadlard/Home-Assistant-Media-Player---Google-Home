@@ -16,7 +16,7 @@ async def async_setup(hass, config):
 
 async def async_setup_entry(hass, entry):
     """Set up the component from a config entry."""
-    # Add your setup code here, if any
+    # Add setup code here, if any (Not will thanks)
     _LOGGER.info("Setting up My Integration from config entry")
 
     return True
