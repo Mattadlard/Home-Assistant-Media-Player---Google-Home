@@ -1,3 +1,5 @@
+# Old Code - More  thought dump really, did some tidying up later see other file
+
 import vlc
 import pychromecast
 import os
