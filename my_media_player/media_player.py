@@ -1,51 +1,20 @@
+# Import necessary libraries
 import vlc
 import pychromecast
 import os
 import random
 import fnmatch
 import time
-import logging
+import logging 
 
-# Loading Libraries - should be enough - Make sure VLC is installed this time
-# Global variables
+# Global variables to hold the player and Chromecast instances
 player = None
 chromecast_device = None
 media_status = {"state": "stopped", "position": 0, "duration": 0, "metadata": {}}
 playlist = []
 current_track_index = 0
 
-# Logging setup
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Function to handle exceptions during various operations
-def handle_exceptions(func):
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except Exception as e:
-            logger.error(f"An error occurred: {str(e)}")
-            # Additional actions like logging, notifying the user, or handling the error could be implemented here
-
-    return wrapper
-
-# Function to save the playlist locally
-def save_playlist():
-    with open("playlist.txt", "w") as file:
-        for track in playlist:
-            file.write(f"{track}\n")
-
-# Function to load the playlist from a local file
-def load_playlist():
-    global playlist
-    try:
-        with open("playlist.txt", "r") as file:
-            playlist = [line.strip() for line in file.readlines()]
-    except FileNotFoundError:
-        logger.warning("Playlist file not found. Creating a new playlist.")
-
-# Function to discover Chromecast devices
-@handle_exceptions
+# Function to discover Chromecast devices on the network
 def discover_chromecast(device_name):
     cast = None
     chromecasts, _ = pychromecast.get_chromecasts()
@@ -56,17 +25,16 @@ def discover_chromecast(device_name):
     return cast
 
 # Function to set the Chromecast device
-@handle_exceptions
 def set_chromecast_device(device_name):
     global chromecast_device
     chromecast_device = discover_chromecast(device_name)
 
-# Function to authenticate NAS
+# Function to authenticate with NAS (Network Attached Storage)
 def authenticate_nas(username, password):
-    # Implement NAS authentication here - Use a time locked us
+    # Implement your NAS authentication logic here
     pass
 
-# Function to search for a song in a media folder
+# Function to search for a song in the media folder
 def search_for_song(media_folder, song_query):
     matching_files = []
     for root, dirs, files in os.walk(media_folder):
@@ -74,7 +42,7 @@ def search_for_song(media_folder, song_query):
             matching_files.append(os.path.join(root, file))
     return matching_files
 
-# Function to get media metadata
+# Function to get metadata of a media file
 def get_media_metadata(file_path):
     media = vlc.Media(file_path)
     media.parse()
@@ -121,7 +89,7 @@ def play_random_media_from_folder(folder_path, chromecast_device):
     global playlist, current_track_index
     media_files = get_media_files_from_folder(folder_path)
     if not media_files:
-        logger.warning(f"No media files found in the folder: {folder_path}")
+        print(f"No media files found in the folder: {folder_path}")
         return
 
     playlist = random.sample(media_files, len(media_files))
@@ -150,7 +118,7 @@ def stop_media():
         player.stop()
         update_media_status()
 
-# Function to set volume
+# Function to set volume level
 def set_volume(volume_level):
     global player, chromecast_device
     if chromecast_device:
@@ -158,7 +126,7 @@ def set_volume(volume_level):
     elif player is not None:
         player.audio_set_volume(volume_level)
 
-# Function to add a track to the playlist
+# Function to add a media file to the playlist
 def add_to_playlist(file_path):
     global playlist
     playlist.append(file_path)
@@ -173,12 +141,12 @@ def playback_events_listener(event, data):
         elif event == "MediaStateChanged":
             update_media_status()
 
-# Function for Home Assistant integration
+# Function to integrate with Home Assistant
 def home_assistant_integration():
-    # Implement Home Assistant integration here
+    # Placeholder for integrating with Home Assistant
     pass
 
-# Function to handle commands from Home Assistant
+# Function to handle commands received from Home Assistant
 def handle_commands_from_home_assistant(data):
     global player, chromecast_device
 
@@ -207,49 +175,41 @@ def update_metadata_on_home_assistant_command(data):
         file_path = data["file_path"]
         media_status["metadata"] = get_media_metadata(file_path)
 
-# Function to periodically
-# publish state updates
+# Function to periodically publish state updates
 def publish_state_updates():
-    # Implement state updates logic here
-    pass
-
-# Function to periodically publish state updates to Home Assistant
-def publish_state_updates_to_home_assistant():
-    # Implement state updates to Home Assistant logic here
+    # Placeholder for publishing state updates
     pass
 
 # Function to retrieve media metadata
 def retrieve_media_metadata(file_path):
     return get_media_metadata(file_path)
 
-# Function to manage a playback queue and add a new track
+# Function to manage playback queue
 def manage_playback_queue(new_track):
     add_to_playlist(new_track)
-
-# Additional features - Updated
 
 # Function to capture playback events
 def capture_playback_events(event, data):
     playback_events_listener(event, data)
 
-# Function to notify users about playback events
+# Function to notify playback status
 def notify_playback_status():
-    # Implement notification logic here
+    # Placeholder for notifying playback status
     pass
 
 # Function to enhance the visual elements of the player
 def visualize_player_elements():
-    # Implement visualization improvements here
+    # Placeholder for enhancing player visualization
     pass
 
 # Function to make the player cross-platform compatible
 def make_player_cross_platform_compatible():
-    # Implement cross-platform compatibility here
+    # Placeholder for making player cross-platform compatible
     pass
 
-# Function to optimize the code for performance
+# Function to optimize player performance
 def optimize_player_performance():
-    # Implement performance optimization here
+    # Placeholder for optimizing player performance
     pass
 
 # Function to search for media files based on a search query
@@ -259,31 +219,32 @@ def search_for_media(media_folder, search_query):
 
 # Function to play media files based on a search query
 def play_searched_media(media_folder, search_query, chromecast_device):
-    global current_track_index
     matching_files = search_for_media(media_folder, search_query)
     if not matching_files:
-        logger.warning(f"No matching media found for search query: {search_query}")
+        print(f"No matching media found for search query: {search_query}")
         return
     playlist.extend(matching_files)
     current_track_index = 0
     play_current_track(chromecast_device)
 
-# Infinite loop to simulate continuous operation
-while True:
-    # Update Media Status
-    update_media_status()
+# Function to play media to multiple devices on the network
+def play_to_devices(devices, file_path):
+    for device in devices:
+        if device.type == "chromecast":
+            cast_device = discover_chromecast(device.name)
+            if cast_device:
+                media_controller = pychromecast.controllers.media.MediaController()
+                cast_device.register_handler(media_controller)
+                cast_device.media_controller = media_controller
+                media_controller.play_media(file_path, "audio/mp3")
+        # Add support for other types of devices here
 
-    # Notify Playback Status
-    notify_playback_status()
+# Function to create speaker groups for synchronized playback
+def create_speaker_group(devices, group_name):
+    # Placeholder for creating speaker groups
+    pass
 
-    # Visualize Player Elements
-    visualize_player_elements()
-
-    # Make Player Cross-Platform Compatible
-    make_player_cross_platform_compatible()
-
-    # Optimize Player Performance
-    optimize_player_performance()
-
-    # Sleep for a short duration before the next iteration
-    time.sleep(1)
+# Main execution block
+if __name__ == "__main__":
+    # Code to test or execute the functions
+    pass
